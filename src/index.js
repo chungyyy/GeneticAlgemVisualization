@@ -1,18 +1,19 @@
-import { Cipher } from "crypto";
-
 // import { createRandomPoints, RandomPointsCallBack } from './GA';
 
 window.addEventListener("DOMContentLoaded", ()=>{
   const canvas = document.getElementById("myCanvas");
   const ctx = canvas.getContext("2d");
   
-  let maxDimension = 400;
+  const maxDimension = 400;
 
-  let totalCities = 7;
+  const totalCities = 10;
   let cities = [];
 
-  let populationNumber = 10;
+  const populationNumber = 1000;
   let populationArray = [];
+  let fitness = [];
+  let mutationRate = .1;
+  let crossoverRate = .8;
 
   let shortestDistanceSoFar = Infinity;
   let bestPoints = [];
@@ -22,6 +23,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
 
   function createRandomPoints(totalCities, maxDimension) {
     ctx.fillStyle = "black";
+    ctx.globalAlpha = 0.3;
     ctx.fillRect(0, 0, maxDimension, maxDimension);
 
     for (let i = 0; i < totalCities; i++) {
@@ -34,78 +36,92 @@ window.addEventListener("DOMContentLoaded", ()=>{
         x: rand_x,
         y: rand_y,
       };
-      ctx.fillStyle = "white";
+      ctx.fillStyle = "black";
       ctx.fill();
       ctx.closePath();
     };
 
-    console.log(populate(populationArray, populationNumber, cities));
-    draw();
+    populate(populationArray, populationNumber, cities);
+    // redraw();
   };
 
-  function populate(popArray, num, shuffleArray) {
+  function populate(popArray, num, fromArr) {
     for (let i = 0; i < num; i++) {
-      let shuffled = shuffle(shuffleArray)
-      popArray[i] = shuffled;
+      let shuffled = shuffle(fromArr);
+      popArray.push(shuffled);
     };
+
     return popArray;
   };
 
-  function draw() {
-    for (let i = 0; i < cities.length - 1; i++) {
-      ctx.beginPath();
-      ctx.moveTo(cities[i].x, cities[i].y);
-      ctx.lineTo(cities[i + 1].x, cities[i + 1].y);
-      ctx.closePath();
-      ctx.strokeStyle = "red";
-      ctx.stroke();
-    };
-  };
-
-  function shuffle(toShuffle) {
-    // Fisher-Yates shuffle algorithm! shuffles in O(n) and with unbias!
-    let a = toShuffle.length;
-    while (a) {
-      let b = Math.floor(Math.random() * a--);
-      let temp = toShuffle[a];
-      toShuffle[a] = toShuffle[b];
-      toShuffle[b] = temp;
-      console.log(toShuffle[a], toShuffle[b]);
-      
-    };
-    console.log(toShuffle , "this is the toShuffle");
-    return toShuffle;
-  };
+  // for brute force
+  // function draw() {
+  //   for (let i = 0; i < cities.length - 1; i++) {
+  //     ctx.beginPath();
+  //     ctx.moveTo(cities[i].x, cities[i].y);
+  //     ctx.lineTo(cities[i + 1].x, cities[i + 1].y);
+  //     ctx.closePath();
+  //     ctx.strokeStyle = "red";
+  //     ctx.stroke();
+  //   };
+  // };
 
   function redraw() {
     ctx.clearRect(0, 0, maxDimension, maxDimension);
     ctx.fillStyle = "black";
+    ctx.globalAlpha = 0.3;
     ctx.fillRect(0, 0, maxDimension, maxDimension);
-    for (let i = 0; i < cities.length; i++) {
+    for (let i = 0; i < totalCities; i++) {
       ctx.beginPath();
       let rand_x = cities[i].x;
       let rand_y = cities[i].y;
       let radius = 2;
       ctx.arc(rand_x, rand_y, radius, 0, 2 * Math.PI);
-      ctx.fillStyle = "white";
+      ctx.fillStyle = "black";
       ctx.fill();
       ctx.closePath();
     };
-    shuffle(cities);
+    cities = shuffle(cities);
 
-    draw();
-    checkShortestDistance(cities);
+    // draw(); // this is what brute forcing through randomization would look like
+    calculateFitness(populationArray); // gene algem
+    checkShortestDistance(populationArray);
+    nextGeneration(); // gene algem
+    console.log("generations");
   };
 
-  function checkShortestDistance(array) {
-    let currentDistance = calculateTotalDistance(array);
-
-    if (shortestDistanceSoFar > currentDistance) {
-      shortestDistanceSoFar = currentDistance;
-      bestPoints = array.slice();
-      console.log(`shortest distance so far: ${shortestDistanceSoFar}`);
-      console.log(bestPoints);
+  function shuffle(toShuffle) {
+    let a = toShuffle.length;
+    let myArr = toShuffle.slice();
+    while (a) {
+      let b = Math.floor(Math.random() * a--);
+      [myArr[a], myArr[b]] = [myArr[b], myArr[a]];
     };
+    return myArr;
+  };
+
+  function checkShortestDistance(populationArr) {
+
+    // genetic algorithm
+    for (let i = 0; i < populationArr.length; i++) {
+      let currentDistance = calculateTotalDistance(populationArr[i]);
+  
+      if (shortestDistanceSoFar > currentDistance) {
+        shortestDistanceSoFar = currentDistance;
+        bestPoints = populationArr[i].slice();
+        console.log(`shortest distance so far: ${shortestDistanceSoFar}`);
+        console.log(bestPoints);
+      };
+    }
+
+    // bruteforce randomize
+      // let currentDistance = calculateTotalDistance(cities);
+      // if (shortestDistanceSoFar > currentDistance) {
+      //   shortestDistanceSoFar = currentDistance;
+      //   bestPoints = cities.slice();
+      //   console.log(`shortest distance so far: ${shortestDistanceSoFar}`);
+      //   console.log(bestPoints);
+      // };
 
     for (let i = 0; i < bestPoints.length - 1; i++) {
       ctx.beginPath();
@@ -124,17 +140,87 @@ window.addEventListener("DOMContentLoaded", ()=>{
       let b = array[i].y - array[i + 1].y;
       let distance = Math.hypot(a, b);
       sum += distance;
-    }
+    };
 
     return sum;
   };
+
+  function calculateFitness(populationArr) {
+    for (let i = 0; i < populationArr.length; i++) {
+      let dist = calculateTotalDistance(populationArr[i]);
+      fitness[i] = 1 / dist;
+    };
+
+    let sum = 0;
+    for (let i = 0; i < fitness.length; i++) {
+      sum += fitness[i];
+    };
+
+    for (let i = 0; i < fitness.length; i++) {
+      fitness[i] = fitness[i] / sum;
+    };
+  };
+
+  function randomPick() {
+    let index = 0;
+    let i = Math.random();
+
+    while (i > 0) {
+      i -= fitness[index];
+
+      if (i > 0) {
+        index += 1;
+      };
+    };
+
+    return populationArray[index];
+  };
+
+  function nextGeneration() {
+    let newPopulationArray = [];
+
+    for (let i = 0; i < populationArray.length; i++) {
+      let firstParent = randomPick();
+      let secondParent = randomPick();
+      let childRoute = crossover(firstParent, secondParent, crossoverRate);
+      let mutantChild = mutate(childRoute, mutationRate);
+      newPopulationArray[i] = mutantChild;
+    };
+    populationArray = newPopulationArray;
+  };
+
+  function mutate(array, mutationRate) {
+    if (Math.random() <= mutationRate) {
+      return shuffle(array);
+    };
+
+    return array;
+  };
+
+  function crossover(firstParent, secondParent, crossoverRate) {
+    if (Math.random() <= crossoverRate) {
+
+      let limit = Math.floor(firstParent.length) + 1;
+      let start = Math.floor(Math.random() * limit);
+      let child = firstParent.slice(start, limit);
+
+      for (let i = 0; i < secondParent.length; i++) {
+        if (!child.includes(secondParent[i])) {
+          child.push(secondParent[i]);
+        };
+      };
+      return child;
+    };
+    return firstParent;
+  };
+
 
 
   //buttons: buttons: buttons: buttons: buttons: 
 
   function start() {
     if (!window.intervalId) {
-      window.intervalId = setInterval(redraw, 1000);
+      window.intervalId = setInterval(redraw, 1000/60);
     };
   };
 
