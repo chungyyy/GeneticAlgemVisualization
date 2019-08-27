@@ -5,13 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script src="dist/main.js"></script>
+  <link rel="stylesheet" href="./styles/canvas.css">
   <title>JS test project</title>
 </head>
 <body>
-  <canvas id="myCanvas" width="800" height="400"></canvas>
-  <br/>
-  <button id="play">play</button>
-  <button id="pause">pause</button>
-  <button id="reset">reset</button>
+  <div class="mainContainer">
+    <div class="canvasContainer">
+      <canvas id="myCanvas" width="400" height="400"></canvas>
+      <br/>
+      <div class="btn-wrapper">
+        <button class="canvas-btn" id="play">play</button>
+        <button class="canvas-btn" id="pause">pause</button>
+        <button class="canvas-btn" id="reset">reset</button>
+      </div>
+    </div>
+    <div class="canvasContainer">
+      <canvas id="myCanvasTwo" width="400" height="400"></canvas>
+        <br />
+        <div class="btn-wrapper">
+          <button class="canvas-btn" id="play2">play</button>
+          <button class="canvas-btn" id="pause2">pause</button>
+          <button class="canvas-btn" id="reset2">reset</button>
+        </div>
+    </div>
+    <div class="canvasContainer">
+      <canvas id="myCanvasThree" width="400" height="400"></canvas>
+      <br />
+      <div class="btn-wrapper">
+        <button class="canvas-btn" id="play3">play</button>
+        <button class="canvas-btn" id="pause3">pause</button>
+        <button class="canvas-btn" id="reset3">reset</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

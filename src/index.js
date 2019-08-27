@@ -1,49 +1,64 @@
-// import { createRandomPoints, RandomPointsCallBack } from './GA';
+import SimulatedAnnealing from './SA';
 
 window.addEventListener("DOMContentLoaded", ()=>{
   const canvas = document.getElementById("myCanvas");
   const ctx = canvas.getContext("2d");
+
+  const canvas2 = document.getElementById("myCanvasTwo");
+  const ctx2 = canvas2.getContext("2d");
+  
+  const canvas3 = document.getElementById("myCanvasThree");
+  const ctx3 = canvas3.getContext("2d");
   
   const maxDimension = 400;
-
+  
   const totalCities = 10;
   let cities = [];
-
-  const populationNumber = 1000;
+  
+  const populationNumber = 500;
   let populationArray = [];
   let fitness = [];
-  let mutationRate = .1;
-  let crossoverRate = .8;
-
+  let mutationRate = .3;
+  let crossoverRate = 0;
+  
   let shortestDistanceSoFar = Infinity;
   let bestPoints = [];
+  
+  const SA = new SimulatedAnnealing(ctx2, cities);
+  createRandomPoints(totalCities, maxDimension, ctx, ctx2, ctx3);
+  
+  function createRandomPoints(totalCities, maxDimension, ...ctxArr) {
+    createRandomCities(totalCities);
+    
+    for (let i = 0; i < ctxArr.length; i++) {
+      ctxArr[i].fillStyle = "black";
+      ctxArr[i].globalAlpha = 0.2;
+      ctxArr[i].fillRect(0, 0, maxDimension, maxDimension);
+      
+      for (let j = 0; j < cities.length; j++) {
+        ctxArr[i].beginPath();
+        let radius = 3;
+        ctxArr[i].arc(cities[j].x, cities[j].y, radius, 0, 2 * Math.PI);
+        ctxArr[i].fillStyle = "black";
+        ctxArr[i].fill();
+        ctxArr[i].closePath();
+      };
+      
+    }
+    populate(populationArray, populationNumber, cities);
+  };
 
-
-  createRandomPoints(totalCities, maxDimension);
-
-  function createRandomPoints(totalCities, maxDimension) {
-    ctx.fillStyle = "black";
-    ctx.globalAlpha = 0.3;
-    ctx.fillRect(0, 0, maxDimension, maxDimension);
-
+  function createRandomCities(totalCities) {
     for (let i = 0; i < totalCities; i++) {
-      ctx.beginPath();
       let rand_x = Math.random(i) * maxDimension;
       let rand_y = Math.random(i) * maxDimension;
-      let radius = 2;
-      ctx.arc(rand_x, rand_y, radius, 0, 2 * Math.PI);
       cities[i] = {
         x: rand_x,
         y: rand_y,
       };
-      ctx.fillStyle = "black";
-      ctx.fill();
-      ctx.closePath();
     };
+  }
 
-    populate(populationArray, populationNumber, cities);
-    // redraw();
-  };
 
   function populate(popArray, num, fromArr) {
     for (let i = 0; i < num; i++) {
@@ -54,39 +69,26 @@ window.addEventListener("DOMContentLoaded", ()=>{
     return popArray;
   };
 
-  // for brute force
-  // function draw() {
-  //   for (let i = 0; i < cities.length - 1; i++) {
-  //     ctx.beginPath();
-  //     ctx.moveTo(cities[i].x, cities[i].y);
-  //     ctx.lineTo(cities[i + 1].x, cities[i + 1].y);
-  //     ctx.closePath();
-  //     ctx.strokeStyle = "red";
-  //     ctx.stroke();
-  //   };
-  // };
-
-  function redraw() {
+  function gaDraw() {
     ctx.clearRect(0, 0, maxDimension, maxDimension);
     ctx.fillStyle = "black";
-    ctx.globalAlpha = 0.3;
+    ctx.globalAlpha = 0.2;
     ctx.fillRect(0, 0, maxDimension, maxDimension);
     for (let i = 0; i < totalCities; i++) {
       ctx.beginPath();
-      let rand_x = cities[i].x;
-      let rand_y = cities[i].y;
-      let radius = 2;
-      ctx.arc(rand_x, rand_y, radius, 0, 2 * Math.PI);
+      let x = cities[i].x;
+      let y = cities[i].y;
+      let radius = 3;
+      ctx.arc(x, y, radius, 0, 2 * Math.PI);
       ctx.fillStyle = "black";
       ctx.fill();
       ctx.closePath();
     };
     cities = shuffle(cities);
 
-    // draw(); // this is what brute forcing through randomization would look like
-    calculateFitness(populationArray); // gene algem
+    calculateFitness(populationArray);
     checkShortestDistance(populationArray);
-    nextGeneration(); // gene algem
+    nextGeneration();
     console.log("generations");
   };
 
@@ -114,23 +116,16 @@ window.addEventListener("DOMContentLoaded", ()=>{
       };
     }
 
-    // bruteforce randomize
-      // let currentDistance = calculateTotalDistance(cities);
-      // if (shortestDistanceSoFar > currentDistance) {
-      //   shortestDistanceSoFar = currentDistance;
-      //   bestPoints = cities.slice();
-      //   console.log(`shortest distance so far: ${shortestDistanceSoFar}`);
-      //   console.log(bestPoints);
-      // };
-
+    
+    ctx.beginPath();
     for (let i = 0; i < bestPoints.length - 1; i++) {
-      ctx.beginPath();
       ctx.moveTo(bestPoints[i].x, bestPoints[i].y);
       ctx.lineTo(bestPoints[i + 1].x, bestPoints[i + 1].y);
       ctx.closePath();
-      ctx.strokeStyle = "green";
-      ctx.stroke();
     };
+    ctx.strokeStyle = "#111e6c";
+    ctx.stroke();
+
   };
 
   function calculateTotalDistance(array) {
@@ -219,14 +214,19 @@ window.addEventListener("DOMContentLoaded", ()=>{
   //buttons: buttons: buttons: buttons: buttons: 
 
   function start() {
-    if (!window.intervalId) {
-      window.intervalId = setInterval(redraw, 1000/60);
+    if (!window.GA) {
+      window.GA = setInterval(gaDraw, 10);
+    };
+    if (!window.SAnn) {
+      window.SAnn = setInterval(SA.saSolve.bind(this), 10);
     };
   };
 
   function stop() {
-    clearInterval(window.intervalId);
-    window.intervalId = null;
+    clearInterval(window.GA);
+    window.GA = null;
+    clearInterval(window.SAnn);
+    window.SAnn = null;
   };
 
   function remap() {
@@ -236,11 +236,17 @@ window.addEventListener("DOMContentLoaded", ()=>{
     bestPoints = [];
     populationArray = [];
     ctx.clearRect(0, 0, maxDimension, maxDimension);
-    createRandomPoints(totalCities, maxDimension);
+    ctx2.clearRect(0, 0, maxDimension, maxDimension);
+    ctx3.clearRect(0, 0, maxDimension, maxDimension);
+    createRandomPoints(totalCities, maxDimension, ctx, ctx2, ctx3);
   }
 
   const play = document.getElementById("play");
   play.addEventListener("click", start);
+  const play2 = document.getElementById("play2");
+  play2.addEventListener("click", start);
+  const play3 = document.getElementById("play3");
+  play3.addEventListener("click", start);
 
   const pause = document.getElementById("pause");
   pause.addEventListener("click", stop);
