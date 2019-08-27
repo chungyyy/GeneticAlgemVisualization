@@ -12,14 +12,15 @@ window.addEventListener("DOMContentLoaded", ()=>{
   
   const maxDimension = 400;
   
-  const totalCities = 11;
+  const totalCities = 13;
   let cities = [];
   
   const populationNumber = 500;
   let populationArray = [];
   let fitness = [];
   let mutationRate = .3;
-  let crossoverRate = .9;
+  let crossoverRate = 1;
+  let numGenerations = 0;
   
   let shortestDistanceSoFar = Infinity;
   let bestPoints = [];
@@ -89,6 +90,8 @@ window.addEventListener("DOMContentLoaded", ()=>{
     calculateFitness(populationArray);
     checkShortestDistance(populationArray);
     nextGeneration();
+    numGenerations += 1;
+    document.getElementById("ga-generation").innerHTML = `Generations: ${numGenerations}`;
   };
 
   function shuffle(toShuffle) {
@@ -233,11 +236,14 @@ window.addEventListener("DOMContentLoaded", ()=>{
     shortestDistanceSoFar = Infinity;
     bestPoints = [];
     populationArray = [];
+    numGenerations = 0;
     ctx.clearRect(0, 0, maxDimension, maxDimension);
     SA.defaultSettings();
     ctx3.clearRect(0, 0, maxDimension, maxDimension);
     createRandomPoints(totalCities, maxDimension, ctx, ctx2, ctx3);
     SA = new SimulatedAnnealing(ctx2, cities);
+    document.getElementById("ga-generation").innerHTML = "Generations: 0";
+    document.getElementById("sa-temp").innerHTML = "Temperature: 0";
     document.getElementById("ga-distance").innerHTML = "Shortest pixel distance so far: 0";
     document.getElementById("sa-distance").innerHTML = "Shortest pixel distance so far: 0";
     document.getElementById("brute-distance").innerHTML = "Shortest pixel distance so far: 0";
@@ -245,10 +251,6 @@ window.addEventListener("DOMContentLoaded", ()=>{
 
   const play = document.getElementById("play");
   play.addEventListener("click", start);
-  // const play2 = document.getElementById("play2");
-  // play2.addEventListener("click", start);
-  // const play3 = document.getElementById("play3");
-  // play3.addEventListener("click", start);
 
   const pause = document.getElementById("pause");
   pause.addEventListener("click", stop);
