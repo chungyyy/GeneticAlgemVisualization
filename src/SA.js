@@ -4,13 +4,22 @@ export default class SimulatedAnnealing {
     this.cities = cities;
     this.shortestDistance = Infinity;
     this.bestPoints = [];
-    this.startTemperature = 100;
+    this.startTemperature = .1;
     this.stopTemperature = 0.0001;
-    this.dropTemperatureProbability = .99;
+    this.dropTemperatureProbability = .9999;
     this.saSolve = this.saSolve.bind(this);
     this.calculateTotalDistance = this.calculateTotalDistance.bind(this);
     this.swap = this.swap.bind(this);
     this.saDraw = this.saDraw.bind(this);
+  }
+
+  defaultSettings() {
+    this.ctx.clearRect(0, 0, 400, 400);
+    this.shortestDistance = Infinity;
+    this.bestPoints = [];
+    this.startTemperature = .1;
+    this.stopTemperature = 0.0001;
+    this.dropTemperatureProbability = .99999;
   }
 
   calculateTotalDistance(arr) {
@@ -40,10 +49,10 @@ export default class SimulatedAnnealing {
     this.ctx.fillStyle = "black";
     this.ctx.globalAlpha = 0.2;
     this.ctx.fillRect(0, 0, 400, 400);
-    for (let i = 0; i < this.bestPoints; i++) {
+    for (let i = 0; i < this.cities.length; i++) {
       this.ctx.beginPath();
-      let x = this.bestPoints[i].x;
-      let y = this.bestPoints[i].y;
+      let x = this.cities[i].x;
+      let y = this.cities[i].y;
       let radius = 3;
       this.ctx.arc(x, y, radius, 0, 2 * Math.PI);
       this.ctx.fillStyle = "black";
@@ -62,6 +71,7 @@ export default class SimulatedAnnealing {
   }
 
   saSolve() {
+
     if (this.startTemperature > this.stopTemperature) {
       let swappedCities = this.swap();
       let oldRouteCost = this.calculateTotalDistance(this.cities);
@@ -71,7 +81,7 @@ export default class SimulatedAnnealing {
         this.cities = swappedCities;
         this.bestPoints = swappedCities;
         this.shortestDistance = newRouteCost;
-        console.log(`shortest sa distance so far: ${this.shortestDistance}`);
+        document.getElementById("sa-distance").innerHTML = `Shortest distance so far: ${Math.floor(this.shortestDistance)}`;
       }
     }
     this.startTemperature *= this.dropTemperatureProbability;
@@ -79,13 +89,4 @@ export default class SimulatedAnnealing {
     this.saDraw();
   }
 
-  // shuffle() {
-  //   let a = this.cities.length;
-  //   let myArr = this.cities.slice();
-  //   while (a) {
-  //     let b = Math.floor(Math.random() * a--);
-  //     [myArr[a], myArr[b]] = [myArr[b], myArr[a]];
-  //   };
-  //   return myArr;
-  // };
 };

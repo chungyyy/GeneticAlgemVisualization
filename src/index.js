@@ -12,19 +12,19 @@ window.addEventListener("DOMContentLoaded", ()=>{
   
   const maxDimension = 400;
   
-  const totalCities = 10;
+  const totalCities = 12;
   let cities = [];
   
   const populationNumber = 500;
   let populationArray = [];
   let fitness = [];
   let mutationRate = .3;
-  let crossoverRate = 0;
+  let crossoverRate = .8;
   
   let shortestDistanceSoFar = Infinity;
   let bestPoints = [];
   
-  const SA = new SimulatedAnnealing(ctx2, cities);
+  let SA = new SimulatedAnnealing(ctx2, cities);
   createRandomPoints(totalCities, maxDimension, ctx, ctx2, ctx3);
   
   function createRandomPoints(totalCities, maxDimension, ...ctxArr) {
@@ -43,8 +43,8 @@ window.addEventListener("DOMContentLoaded", ()=>{
         ctxArr[i].fill();
         ctxArr[i].closePath();
       };
-      
     }
+
     populate(populationArray, populationNumber, cities);
   };
 
@@ -89,7 +89,6 @@ window.addEventListener("DOMContentLoaded", ()=>{
     calculateFitness(populationArray);
     checkShortestDistance(populationArray);
     nextGeneration();
-    console.log("generations");
   };
 
   function shuffle(toShuffle) {
@@ -111,8 +110,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
       if (shortestDistanceSoFar > currentDistance) {
         shortestDistanceSoFar = currentDistance;
         bestPoints = populationArr[i].slice();
-        console.log(`shortest distance so far: ${shortestDistanceSoFar}`);
-        console.log(bestPoints);
+        document.getElementById("ga-distance").innerHTML = `Shortest distance so far: ${Math.floor(shortestDistanceSoFar)}`;
       };
     }
 
@@ -236,17 +234,18 @@ window.addEventListener("DOMContentLoaded", ()=>{
     bestPoints = [];
     populationArray = [];
     ctx.clearRect(0, 0, maxDimension, maxDimension);
-    ctx2.clearRect(0, 0, maxDimension, maxDimension);
+    SA.defaultSettings();
     ctx3.clearRect(0, 0, maxDimension, maxDimension);
     createRandomPoints(totalCities, maxDimension, ctx, ctx2, ctx3);
+    SA = new SimulatedAnnealing(ctx2, cities);
   }
 
   const play = document.getElementById("play");
   play.addEventListener("click", start);
-  const play2 = document.getElementById("play2");
-  play2.addEventListener("click", start);
-  const play3 = document.getElementById("play3");
-  play3.addEventListener("click", start);
+  // const play2 = document.getElementById("play2");
+  // play2.addEventListener("click", start);
+  // const play3 = document.getElementById("play3");
+  // play3.addEventListener("click", start);
 
   const pause = document.getElementById("pause");
   pause.addEventListener("click", stop);

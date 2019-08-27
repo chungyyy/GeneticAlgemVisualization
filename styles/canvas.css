@@ -17,10 +17,19 @@ body {
   width: 400px;
   flex-direction: column;
   border: 1px solid #1d2951;
-  /* background: red; */
 }
 
 .btn-wrapper {
   display: flex;
   justify-content: center;
+  height: 10px;
+}
+
+.canvas-btn {
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 50px;
+  font-size: 2em;
+  height: 50px;
+  border-radius: 10px;
 }
