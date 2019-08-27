@@ -12,14 +12,14 @@ window.addEventListener("DOMContentLoaded", ()=>{
   
   const maxDimension = 400;
   
-  const totalCities = 12;
+  const totalCities = 11;
   let cities = [];
   
   const populationNumber = 500;
   let populationArray = [];
   let fitness = [];
   let mutationRate = .3;
-  let crossoverRate = .8;
+  let crossoverRate = .9;
   
   let shortestDistanceSoFar = Infinity;
   let bestPoints = [];
@@ -110,7 +110,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
       if (shortestDistanceSoFar > currentDistance) {
         shortestDistanceSoFar = currentDistance;
         bestPoints = populationArr[i].slice();
-        document.getElementById("ga-distance").innerHTML = `Shortest distance so far: ${Math.floor(shortestDistanceSoFar)}`;
+        document.getElementById("ga-distance").innerHTML = `Shortest pixel distance so far: ${Math.floor(shortestDistanceSoFar)}`;
       };
     }
 
@@ -238,6 +238,9 @@ window.addEventListener("DOMContentLoaded", ()=>{
     ctx3.clearRect(0, 0, maxDimension, maxDimension);
     createRandomPoints(totalCities, maxDimension, ctx, ctx2, ctx3);
     SA = new SimulatedAnnealing(ctx2, cities);
+    document.getElementById("ga-distance").innerHTML = "Shortest pixel distance so far: 0";
+    document.getElementById("sa-distance").innerHTML = "Shortest pixel distance so far: 0";
+    document.getElementById("brute-distance").innerHTML = "Shortest pixel distance so far: 0";
   }
 
   const play = document.getElementById("play");

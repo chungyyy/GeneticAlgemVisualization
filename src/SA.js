@@ -17,8 +17,8 @@ export default class SimulatedAnnealing {
     this.ctx.clearRect(0, 0, 400, 400);
     this.shortestDistance = Infinity;
     this.bestPoints = [];
-    this.startTemperature = .1;
-    this.stopTemperature = 0.0001;
+    this.startTemperature = 100;
+    this.stopTemperature = 0.1;
     this.dropTemperatureProbability = .99999;
   }
 
@@ -81,7 +81,7 @@ export default class SimulatedAnnealing {
         this.cities = swappedCities;
         this.bestPoints = swappedCities;
         this.shortestDistance = newRouteCost;
-        document.getElementById("sa-distance").innerHTML = `Shortest distance so far: ${Math.floor(this.shortestDistance)}`;
+        document.getElementById("sa-distance").innerHTML = `Shortest pixel distance so far: ${Math.floor(this.shortestDistance)}`;
       }
     }
     this.startTemperature *= this.dropTemperatureProbability;
