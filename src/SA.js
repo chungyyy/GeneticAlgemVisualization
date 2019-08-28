@@ -1,4 +1,3 @@
-
 export default class SimulatedAnnealing {
   constructor(ctx, cities) {
     this.ctx = ctx;
@@ -87,7 +86,6 @@ export default class SimulatedAnnealing {
       }
     }
     this.startTemperature *= this.dropTemperatureProbability;
-    console.log(`temperature is ${this.startTemperature}`);
     this.saDraw();
   }
 

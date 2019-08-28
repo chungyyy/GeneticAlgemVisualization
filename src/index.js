@@ -1,4 +1,5 @@
 import SimulatedAnnealing from './SA';
+import LexicoGraphicOrdering from './LO';
 
 window.addEventListener("DOMContentLoaded", ()=>{
   const canvas = document.getElementById("myCanvas");
@@ -12,7 +13,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
   
   const maxDimension = 400;
   
-  const totalCities = 13;
+  const totalCities = 7;
   let cities = [];
   
   const populationNumber = 500;
@@ -25,8 +26,9 @@ window.addEventListener("DOMContentLoaded", ()=>{
   let shortestDistanceSoFar = Infinity;
   let bestPoints = [];
   
-  let SA = new SimulatedAnnealing(ctx2, cities);
   createRandomPoints(totalCities, maxDimension, ctx, ctx2, ctx3);
+  let SA = new SimulatedAnnealing(ctx2, cities);
+  let LO = new LexicoGraphicOrdering(ctx3, cities);
   
   function createRandomPoints(totalCities, maxDimension, ...ctxArr) {
     createRandomCities(totalCities);
@@ -221,6 +223,9 @@ window.addEventListener("DOMContentLoaded", ()=>{
     if (!window.SAnn) {
       window.SAnn = setInterval(SA.saSolve.bind(this), 10);
     };
+    if (!window.LOnn) {
+      window.LOnn = setInterval(LO.loSolve.bind(this), 10);
+    };
   };
 
   function stop() {
@@ -228,6 +233,8 @@ window.addEventListener("DOMContentLoaded", ()=>{
     window.GA = null;
     clearInterval(window.SAnn);
     window.SAnn = null;
+    clearInterval(window.LOnn);
+    window.LOnn = null;
   };
 
   function remap() {
@@ -242,11 +249,14 @@ window.addEventListener("DOMContentLoaded", ()=>{
     ctx3.clearRect(0, 0, maxDimension, maxDimension);
     createRandomPoints(totalCities, maxDimension, ctx, ctx2, ctx3);
     SA = new SimulatedAnnealing(ctx2, cities);
+    LO = new LexicoGraphicOrdering(ctx3, cities);
+
     document.getElementById("ga-generation").innerHTML = "Generations: 0";
     document.getElementById("sa-temp").innerHTML = "Temperature: 0";
     document.getElementById("ga-distance").innerHTML = "Shortest pixel distance so far: 0";
     document.getElementById("sa-distance").innerHTML = "Shortest pixel distance so far: 0";
     document.getElementById("brute-distance").innerHTML = "Shortest pixel distance so far: 0";
+    document.getElementById("percentComplete").innerHTML = "Percent Complete: 0.00%";
   }
 
   const play = document.getElementById("play");
