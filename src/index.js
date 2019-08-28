@@ -19,8 +19,8 @@ window.addEventListener("DOMContentLoaded", ()=>{
   const populationNumber = 500;
   let populationArray = [];
   let fitness = [];
-  let mutationRate = .3;
-  let crossoverRate = 1;
+  let mutationRate = .05;
+  let crossoverRate = .5;
   let numGenerations = 0;
   
   let shortestDistanceSoFar = Infinity;
