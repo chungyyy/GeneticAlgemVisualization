@@ -7,6 +7,17 @@ body {
   background-color: #fefefa;
 }
 
+.title {
+  display: flex;
+  justify-content: center;
+}
+
+#input-range {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
 .mainContainer {
   display: flex;
   justify-content: space-evenly;
@@ -28,7 +39,7 @@ body {
 .canvas-btn {
   margin-left: 5px;
   margin-right: 5px;
-  margin-top: 50px;
+  margin-top: 20px;
   font-size: 2em;
   height: 50px;
   border-radius: 10px;

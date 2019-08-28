@@ -1,9 +1,10 @@
 export default class LexicoGraphicOrdering {
   constructor(ctx, cities) {
     this.ctx = ctx;
-    this.cities = cities
+    this.cities = cities;
+    this.fixedCities = cities;
     this.order = this.orderFunc(cities);
-    this.shortestDistance = Infinity;
+    this.shortestDistance = this.calculateTotalDistance(cities);
     this.bestPoints = cities;
     this.iterationNum = 0;
     this.nextOrder = this.nextOrder.bind(this);
@@ -31,11 +32,6 @@ export default class LexicoGraphicOrdering {
       totalDistance += distance;
     };
 
-    if (this.shortestDistance > totalDistance) {
-      this.shortestDistance = totalDistance;
-      this.bestPoints = arr;
-    }
-
     return totalDistance;
   };
 
@@ -44,6 +40,7 @@ export default class LexicoGraphicOrdering {
     this.ctx.fillStyle = "black";
     this.ctx.globalAlpha = 0.2;
     this.ctx.fillRect(0, 0, 400, 400);
+
     for (let i = 0; i < this.cities.length; i++) {
       this.ctx.beginPath();
       let x = this.cities[this.order[i]].x;
@@ -57,15 +54,13 @@ export default class LexicoGraphicOrdering {
 
     this.ctx.beginPath();
     for (let i = 0; i < this.order.length - 1; i++) {
-      this.ctx.moveTo(this.cities[this.order[i]].x, this.cities[this.order[i]].y);
-      this.ctx.lineTo(this.cities[this.order[i + 1]].x, this.cities[this.order[i + 1]].y);
+      this.ctx.moveTo(this.fixedCities[this.order[i]].x, this.fixedCities[this.order[i]].y);
+      this.ctx.lineTo(this.fixedCities[this.order[i + 1]].x, this.fixedCities[this.order[i + 1]].y);
       this.ctx.closePath();
     };
     this.ctx.strokeStyle = "#111e6c";
     this.ctx.stroke();
-
-    this.calculateTotalDistance(this.cities);
-
+    
     this.ctx.beginPath();
     for (let i = 0; i < this.bestPoints.length - 1; i++) {
       this.ctx.moveTo(this.bestPoints[i].x, this.bestPoints[i].y);
@@ -74,16 +69,24 @@ export default class LexicoGraphicOrdering {
     };
     this.ctx.strokeStyle = "red";
     this.ctx.stroke();
-
+    
     if (Math.floor((this.iterationNum / this.factorial(this.cities.length)) * 100) < 100) {
       this.iterationNum += 1;
     }
-    this.nextOrder(this.order);
+
+    let totalDistance = this.calculateTotalDistance(this.cities);
+    if (this.shortestDistance >= totalDistance) {
+      this.shortestDistance = totalDistance;
+      this.bestPoints = this.cities;
+    }
+
     document.getElementById("percentComplete").innerHTML = `Percent Complete: ${Number(this.iterationNum / this.factorial(this.cities.length) * 100).toFixed(2)}%`;
     document.getElementById("brute-distance").innerHTML = `Shortest pixel distance so far: ${Math.floor(this.shortestDistance)}`;
+    this.nextOrder();
   }
 
-  nextOrder(orderedArray) {
+  nextOrder() {
+    let orderedArray = this.order;
     let largestX = Infinity;
     let citiesArr = this.cities.slice();
     for (let i = 0; i < orderedArray.length - 1; i++) {
@@ -100,7 +103,7 @@ export default class LexicoGraphicOrdering {
     }
 
     [orderedArray[largestX], orderedArray[largestY]] = [orderedArray[largestY], orderedArray[largestX]];
-    [citiesArr[largestX], citiesArr[largestY]] = [citiesArr[largestY], citiesArr[largestX]];
+    [citiesArr[orderedArray[largestX]], citiesArr[orderedArray[largestY]]] = [citiesArr[orderedArray[largestY]], citiesArr[orderedArray[largestX]]];
 
     let splicedSuffix = orderedArray.splice(largestX + 1);
     orderedArray = orderedArray.concat(splicedSuffix.reverse());

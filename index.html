@@ -9,6 +9,7 @@
   <title>JS test project</title>
 </head>
 <body>
+  <h1 class="title">Traveling Salesman Visualization</h1>
   <div class="mainContainer">
     <div class="canvasContainer">
       <canvas id="myCanvas" width="400" height="400"></canvas>
@@ -50,6 +51,19 @@
         </span>
     </div>
   </div>
+    <div id="input-range">
+      <input type="range" 
+        id="cities-setter" 
+        name="Set Number of Cities" 
+        min="3" 
+        max="13" 
+        value="8" 
+        step="1"
+      >
+      <label id="city-num" for="Set Number of Cities">Number of Cities: 8</label>
+    </div>
+        
+
         <div class="btn-wrapper">
           <button class="canvas-btn" id="play">play</button>
           <button class="canvas-btn" id="pause">pause</button>

@@ -13,7 +13,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
   
   const maxDimension = 400;
   
-  const totalCities = 7;
+  let totalCities = 8;
   let cities = [];
   
   const populationNumber = 500;
@@ -25,7 +25,17 @@ window.addEventListener("DOMContentLoaded", ()=>{
   
   let shortestDistanceSoFar = Infinity;
   let bestPoints = [];
-  
+
+  let range = document.getElementById("cities-setter");
+  let label = document.getElementById("city-num");
+  range.addEventListener('change', changeTotalCities);
+
+  function changeTotalCities() {
+    totalCities = range.value;
+    label.innerHTML = `Number of Cities: ${totalCities}`;
+    remap();
+  }
+
   createRandomPoints(totalCities, maxDimension, ctx, ctx2, ctx3);
   let SA = new SimulatedAnnealing(ctx2, cities);
   let LO = new LexicoGraphicOrdering(ctx3, cities);
@@ -107,8 +117,6 @@ window.addEventListener("DOMContentLoaded", ()=>{
   };
 
   function checkShortestDistance(populationArr) {
-
-    // genetic algorithm
     for (let i = 0; i < populationArr.length; i++) {
       let currentDistance = calculateTotalDistance(populationArr[i]);
   
@@ -218,13 +226,13 @@ window.addEventListener("DOMContentLoaded", ()=>{
 
   function start() {
     if (!window.GA) {
-      window.GA = setInterval(gaDraw, 10);
+      window.GA = setInterval(gaDraw, 0);
     };
     if (!window.SAnn) {
-      window.SAnn = setInterval(SA.saSolve.bind(this), 10);
+      window.SAnn = setInterval(SA.saSolve.bind(this), 0);
     };
     if (!window.LOnn) {
-      window.LOnn = setInterval(LO.loSolve.bind(this), 10);
+      window.LOnn = setInterval(LO.loSolve.bind(this), 0);
     };
   };
 

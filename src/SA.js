@@ -79,8 +79,10 @@ export default class SimulatedAnnealing {
       let cost = newRouteCost - oldRouteCost;
       if (cost < 0 || (Math.random() <= Math.exp((0 - cost) / this.startTemperature))) {
         this.cities = swappedCities;
-        this.bestPoints = swappedCities;
-        this.shortestDistance = newRouteCost;
+        if (this.shortestDistance >= newRouteCost) {
+          this.shortestDistance = newRouteCost;
+          this.bestPoints = swappedCities;
+        }
         document.getElementById("sa-temp").innerHTML = `Temperature: ${Math.floor(this.startTemperature)}`;
         document.getElementById("sa-distance").innerHTML = `Shortest pixel distance so far: ${Math.floor(this.shortestDistance)}`;
       }
