@@ -20,7 +20,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
   let populationArray = [];
   let fitness = [];
   let mutationRate = .05;
-  let crossoverRate = .5;
+  let crossoverRate = .3;
   let numGenerations = 0;
   
   let shortestDistanceSoFar = Infinity;

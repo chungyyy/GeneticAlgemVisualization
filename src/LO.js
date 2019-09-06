@@ -83,6 +83,8 @@ export default class LexicoGraphicOrdering {
     document.getElementById("percentComplete").innerHTML = `Percent Complete: ${Number(this.iterationNum / this.factorial(this.cities.length) * 100).toFixed(2)}%`;
     document.getElementById("brute-distance").innerHTML = `Shortest pixel distance so far: ${Math.floor(this.shortestDistance)}`;
     this.nextOrder();
+    debugger
+    console.log(this.order);
   }
 
   nextOrder() {
