@@ -44,3 +44,28 @@ body {
   height: 50px;
   border-radius: 10px;
 }
+
+.fa-question-circle {
+  margin: 5px;
+  font-size: 25px;
+}
+
+.fa-question-circle:hover:after {
+  content: var(--info);
+  white-space: pre-wrap;
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  border: 1px solid #00000052;
+  border-radius: 5px;
+  padding: 5px;
+  width: 450px;
+  height: fit-content;
+  background-color: #fefefa;
+  font-size: 18px;
+  line-height: 1.2em;
+}
+
+:root{
+    --info: "GeneticAlgemVisualization visualizes the traveling salesman problem being run through a genetic algorithm / Simulated Annealing / Brute Force. \A \A The algorithm attempts to optimize a route in the TSP using concepts of evolutionary biology / metallurgy / brute force. \A \A The genetic algorithm implements three core rules on a predefined population size, namely, selection, crossover, and mutation, we assess which route generated amongst many to be the strongest through a fitness function, implement crossovers to converge the results to an optima, and introduce mutations to diverge from potential local optimas. \A \A Simulated Annealing is a heuristic for effective optimization, it's annealing is analogous to metallurgy's annealing system. High temperature will have more probability of accepting random moves to avoid local optimas while it settles to accepting only better moves at low temperatures. \A \A Finally we brute force all permutations of routes. Lexicographic Ordering is applied so as to increase the numerical ordering of the permutations.";
+}

@@ -1,12 +1,10 @@
 * GeneticAlgemVisualization
 * Background and Overview
-    * GeneticAlgemVisualization visualizes the traveling salesman problem being run through a genetic algorithm. The algorithm attemps to optimize a route in the TSP using concepts of evolutionary biology. 
-    * The algorithm implements three core rules on a predefined population size, namely-- selection, crossover, mutation. In the TSP, we assess which route generated amongst many to be the strongest through a fitness function, implement crossovers to converge the results to an optima, and introduce mutations to diverge from potential local optimas.
+    * GeneticAlgemVisualization visualizes the traveling salesman problem being run through a genetic algorithm / Simulated Annealing / Brute Force. The algorithm attemps to optimize a route in the TSP using concepts of evolutionary biology / metallurgy / brute force. 
+    * The genetic algorithm implements three core rules on a predefined population size, namely-- selection, crossover, mutation. In the TSP, we assess which route generated amongst many to be the strongest through a fitness function, implement crossovers to converge the results to an optima, and introduce mutations to diverge from potential local optimas.
+    * Simulated Annealing 
 * Functionality and MVP Features
-    * TBD
+    * Play / Pause / Reset / Number of cities
 * Architecture and Technologies
-        * D3.js for visualization and allowing users to plot destination points on a map.
+        * Pure javascript, HTML canvas
         * webpack for bundling dependencies / developing
-    ...
-Implementation Timeline
-    * TBD
