@@ -1,7 +1,9 @@
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
+
 
 body {
   background-color: #fefefa;
